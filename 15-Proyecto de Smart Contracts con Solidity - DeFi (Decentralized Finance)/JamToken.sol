@@ -6,11 +6,15 @@ contract JamToken {
     // Declaraciones 
     string public name = "JAM Token";
     string public symbol = "JAM";
+    // Cantidad de tokens que se van a crear
     uint256 public totalSupply = 1000000000000000000000000; // 1 millon de tokens
+    // Establece el número de decimales, tengo 24 ceros en totalSupply
+    // mas los decimales, da el millon de tokens que quiero crear
     uint8 public decimals = 18;
 
     // Evento para la transferencia de tokens de un usuario
     event Transfer (
+        // Indexed es para que quede indexada y poder filtrarla cuando se escanee
         address indexed _from,
         address indexed _to,
         uint256 _value
@@ -24,10 +28,15 @@ contract JamToken {
     );
 
     // Estructuras de datos 
+    // mapping para obtener el balance de una persona
     mapping(address => uint256) public balanceOf;
+    // selecciona el allowance, que es la cantidad que permitimos que un
+    // SPENDER gestione del OWNER
     mapping(address => mapping(address => uint)) public allowance;
 
     // Constructor 
+    // Cuando lo despliegue, el balance o el millon del smart contract se iran
+    // a la cuenta que los despliega o owner
     constructor(){
         balanceOf[msg.sender] = totalSupply;
     }
@@ -42,7 +51,10 @@ contract JamToken {
     }
 
     // Aprobacion de una cantidad para ser gastada por un operador
+    // para enviar un token debo escribir 1000.000.000.000.000.000 debido a 
+    // los 18 numeros decimales que le dimos al smart contract
     function approve(address _spender, uint256 _value) public returns (bool success){
+        // sender para dar permisos al spender
         allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
